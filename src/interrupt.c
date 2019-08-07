@@ -1,7 +1,43 @@
-#ifndef NVIC
-#define NVIC
+
+#include <libopencm3/stm32/exti.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
+#include <stdint.h>
+#include "main.h"
+#include "delay.h"
+#include "system.h"
+#include "tool.h"
+#include "uart.h"
+
+void sys_tick_handler() {
+    millis++;
+    if (!(((up & 0x000F) == 0x000F) || ((up & 0x00F0) == 0x00F0) ||
+          ((up & 0x0F00) == 0x0F00) || ((up & 0xF000) == 0xF000))) {
+        up += 0x1111;
+        activ = 1;
+        int16_t s = mapc(u[1], 1100, 1900, -10000, 10000);
+        int16_t a = mapc(u[0], 1100, 1900, -5000, 5000);
+
+        if(!(millis%5)){
+            sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
+            usart_print(bufC);
+        }
+        move(s + a, s - a);
+    } else {
+        activ = 0;
+        move(0, 0);
+        u[0] = 0;
+        u[1] = 0;
+        u[2] = 0;
+        u[3] = 0;
+    }
+}
+
 
 void exti15_10_isr() {
+    static uint32_t ul[4];
     uint32_t sysTime = DWT_CYCCNT;
     if (exti_get_flag_status(EXTI12)) {
         exti_reset_request(EXTI12);
@@ -104,5 +140,3 @@ void usart1_isr() {
         }
     }
 }
-
-#endif

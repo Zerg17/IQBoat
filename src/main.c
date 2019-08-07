@@ -19,9 +19,7 @@
 #include "move.h"
 #include "ubx6.h"
 
-volatile uint32_t millis;
 volatile uint8_t activ = 0;
-uint32_t ul[4];
 volatile uint16_t u[4] = {1500, 1500, 1000, 1000};
 volatile uint16_t up = 0xFFFF;
 NAV_POSLLH POSLLH;
@@ -46,6 +44,7 @@ int main(void) {
     // nvic_enable_irq(NVIC_DMA1_CHANNEL6_IRQ);
 
     system_start();
+    
     while (1) {
         beginPacket();
         lora_write((uint8_t*)u, 8);
@@ -53,29 +52,3 @@ int main(void) {
         _delay_ms(500);
     }
 }
-
-void sys_tick_handler() {
-    millis++;
-    if (!(((up & 0x000F) == 0x000F) || ((up & 0x00F0) == 0x00F0) ||
-          ((up & 0x0F00) == 0x0F00) || ((up & 0xF000) == 0xF000))) {
-        up += 0x1111;
-        activ = 1;
-        int16_t s = mapc(u[1], 1100, 1900, -10000, 10000);
-        int16_t a = mapc(u[0], 1100, 1900, -5000, 5000);
-
-        if(!(millis%5)){
-            //sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
-            //usart_print(bufC);
-        }
-        move(s + a, s - a);
-    } else {
-        activ = 0;
-        move(0, 0);
-        u[0] = 0;
-        u[1] = 0;
-        u[2] = 0;
-        u[3] = 0;
-    }
-}
-
-#include "nvic.h"

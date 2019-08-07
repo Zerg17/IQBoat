@@ -7,9 +7,12 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
+#include <stdio.h>
 #include "delay.h"
 #include "uart.h"
+#include "move.h"
 
+volatile uint32_t millis;
 
 static void clock_setup(void) {
     rcc_clock_setup_in_hse_8mhz_out_72mhz();
@@ -58,7 +61,7 @@ static void gpio_setup(void) {
     gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
                   GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART2_TX);
 
-    // Uart debug
+    // GPS
     AFIO_MAPR |= AFIO_MAPR_USART1_REMAP;
     gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
                   GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_RE_TX);
