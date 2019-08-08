@@ -1,3 +1,4 @@
+#include "move.h"
 #include <libopencm3/stm32/timer.h>
 #include "tool.h"
 

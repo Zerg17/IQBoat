@@ -1,27 +1,11 @@
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
-#include <libopencm3/stm32/adc.h>
-#include <libopencm3/stm32/dma.h>
-#include <libopencm3/stm32/exti.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/spi.h>
-#include <libopencm3/stm32/timer.h>
-#include <libopencm3/stm32/usart.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <strings.h>
 #include "system.h"
 #include "delay.h"
 #include "lora.h"
 #include "uart.h"
-#include "tool.h"
 #include "move.h"
 #include "ubx6.h"
+#include "rc.h"
 
-volatile uint8_t activ = 0;
-volatile uint16_t u[4] = {1500, 1500, 1000, 1000};
-volatile uint16_t up = 0xFFFF;
 NAV_POSLLH POSLLH;
 NAV_VELNED VELNED;
 
@@ -34,6 +18,9 @@ int main(void) {
     move_setup();
     lora_setup();
     usart_print("System start\n");
+    
+    //sprintf(bufC, "0x%02X\n", writeRegister(REG_VERSION));
+    //usart_print(bufC);
 
     // USART_BRR(USART1) = rcc_apb2_frequency / 9600 + 1;
     // USART_CR1(USART1) |= USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE;
@@ -49,6 +36,6 @@ int main(void) {
         beginPacket();
         lora_write((uint8_t*)u, 8);
         endPacket();
-        _delay_ms(500);
+        _delay_ms(200);
     }
 }

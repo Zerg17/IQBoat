@@ -2,7 +2,6 @@
 #define DELAY
 
 #include <stdint.h>
-#include <libopencm3/stm32/rcc.h>
 
 #define  DWT_CYCCNT    *(volatile uint32_t *)0xE0001004
 #define  DWT_CONTROL   *(volatile uint32_t *)0xE0001000

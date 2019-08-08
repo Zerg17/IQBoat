@@ -1,4 +1,3 @@
-
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/dma.h>
@@ -10,81 +9,23 @@
 #include "system.h"
 #include "tool.h"
 #include "uart.h"
+#include "rc.h"
 
 void sys_tick_handler() {
     millis++;
-    if (!(((up & 0x000F) == 0x000F) || ((up & 0x00F0) == 0x00F0) ||
-          ((up & 0x0F00) == 0x0F00) || ((up & 0xF000) == 0xF000))) {
-        up += 0x1111;
-        activ = 1;
+    rc_update();
+    if (rc_check()) {
+       
         int16_t s = mapc(u[1], 1100, 1900, -10000, 10000);
         int16_t a = mapc(u[0], 1100, 1900, -5000, 5000);
 
         if(!(millis%5)){
-            sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
-            usart_print(bufC);
+            //sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
+            //usart_print(bufC);
         }
         move(s + a, s - a);
     } else {
-        activ = 0;
         move(0, 0);
-        u[0] = 0;
-        u[1] = 0;
-        u[2] = 0;
-        u[3] = 0;
-    }
-}
-
-
-void exti15_10_isr() {
-    static uint32_t ul[4];
-    uint32_t sysTime = DWT_CYCCNT;
-    if (exti_get_flag_status(EXTI12)) {
-        exti_reset_request(EXTI12);
-        if (!gpio_get(GPIOB, GPIO12)) {
-            uint16_t uz = (sysTime - ul[0]) / 72;
-            if (uz > 800 && uz < 2200) {
-                u[0] = uz;
-                up &= 0xFFF0;
-            }
-        } else
-            ul[0] = sysTime;
-    }
-
-    if (exti_get_flag_status(EXTI13)) {
-        exti_reset_request(EXTI13);
-        if (!gpio_get(GPIOB, GPIO13)) {
-            uint16_t uz = (sysTime - ul[1]) / 72;
-            if (uz > 800 && uz < 2200) {
-                u[1] = uz;
-                up &= 0xFF0F;
-            }
-        } else
-            ul[1] = sysTime;
-    }
-
-    if (exti_get_flag_status(EXTI14)) {
-        exti_reset_request(EXTI14);
-        if (!gpio_get(GPIOB, GPIO14)) {
-            uint16_t uz = (sysTime - ul[2]) / 72;
-            if (uz > 800 && uz < 2200) {
-                u[2] = uz;
-                up &= 0xF0FF;
-            }
-        } else
-            ul[2] = sysTime;
-    }
-
-    if (exti_get_flag_status(EXTI15)) {
-        exti_reset_request(EXTI15);
-        if (!gpio_get(GPIOB, GPIO15)) {
-            uint16_t uz = (sysTime - ul[3]) / 72;
-            if (uz > 800 && uz < 2200) {
-                u[3] = uz;
-                up &= 0x0FFF;
-            }
-        } else
-            ul[3] = sysTime;
     }
 }
 

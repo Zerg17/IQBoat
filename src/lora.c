@@ -105,6 +105,6 @@ void lora_setup() {
     writeRegister(REG_FIFO_RX_BASE_ADDR, 0);
     writeRegister(REG_LNA, readRegister(REG_LNA) | 0x03);
     writeRegister(REG_MODEM_CONFIG_3, 0x04);
-    setTxPower(2);
+    setTxPower(6);
     writeRegister(REG_OP_MODE, MODE_LONG_RANGE_MODE | MODE_STDBY);
 }
