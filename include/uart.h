@@ -7,9 +7,10 @@
 #include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 
-void usart_setup();
-void usart_print(char*);
-void usart_write(uint8_t*, uint16_t len);
+void uart_setup();
+void uart_print(char*);
+void uart_write(uint8_t*, uint16_t len);
+void uart_wait();
 
 
 #endif

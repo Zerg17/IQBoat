@@ -113,7 +113,7 @@ void system_setup() {
     clock_setup();
     systick_setup();
     exti_setup();
-    usart_setup();
+    uart_setup();
     // adc_setup();
     gpio_setup();
     spi_setup();
