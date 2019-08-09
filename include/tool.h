@@ -8,6 +8,8 @@
 #define constrain(amt, low, high) \
     ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
 #define round(x) ((x) >= 0 ? (long)((x) + 0.5) : (long)((x)-0.5))
+#define waitR(a, b) while (!((a) & (b)))
+#define waitS(a, b) while ((a) & (b))
 long map(long, long, long, long, long);
 long mapc(long, long, long, long, long);
 uint16_t strl(char*);

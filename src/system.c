@@ -7,6 +7,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
+#include <libopencm3/stm32/i2c.h>
 #include <stdio.h>
 #include "delay.h"
 #include "uart.h"
@@ -28,6 +29,7 @@ static void clock_setup(void) {
     rcc_periph_clock_enable(RCC_USART1);
     rcc_periph_clock_enable(RCC_USART2);
     rcc_periph_clock_enable(RCC_SPI1);
+    rcc_periph_clock_enable(RCC_I2C1);
 }
 
 static void systick_setup(void) {
@@ -71,6 +73,12 @@ static void gpio_setup(void) {
                   GPIO_TIM3_CH1 | GPIO_TIM3_CH2);
     gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
                   GPIO_TIM3_CH3 | GPIO_TIM3_CH4);
+
+    // Компас
+    AFIO_MAPR |= AFIO_MAPR_I2C1_REMAP;
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,
+                  GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
+                  GPIO_I2C1_RE_SCL | GPIO_I2C1_RE_SDA);
 }
 
 // static void adc_setup(void) {
@@ -88,6 +96,13 @@ static void spi_setup(void) {
                     SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE;
 }
 
+static void i2c_setup() {
+    I2C_CR2(I2C1) |= I2C_CR2_FREQ_36MHZ;
+    I2C_CCR(I2C1) |= I2C_CCR_FS | 0x1e;
+    I2C_TRISE(I2C1) = 0x0b;
+    I2C_CR1(I2C1) |= I2C_CR1_PE;
+}
+
 static void nvic_start(void) {
     systick_interrupt_enable();
     nvic_enable_irq(NVIC_USART1_IRQ);
@@ -102,6 +117,7 @@ void system_setup() {
     // adc_setup();
     gpio_setup();
     spi_setup();
+    i2c_setup();
 }
 
 void system_start() {
