@@ -3,6 +3,13 @@
 #include <stdint.h>
 #include "uart.h"
 
+void i2c_setup() {
+    I2C_CR2(I2C1) |= 36;
+    I2C_CCR(I2C1) |= 180;
+    I2C_TRISE(I2C1) = 37;
+    I2C_CR1(I2C1) |= I2C_CR1_PE;
+}
+
 uint8_t i2c_start(uint32_t i2c, uint8_t addr, uint8_t mode) {
     I2C_CR1(i2c) |= I2C_CR1_START;
     while (!(I2C_SR1(i2c) & I2C_SR1_SB)) continue;
@@ -19,9 +26,12 @@ uint8_t i2c_start(uint32_t i2c, uint8_t addr, uint8_t mode) {
 
 void i2c_stop(uint32_t i2c) { I2C_CR1(i2c) |= I2C_CR1_STOP; }
 
-void i2c_write(uint32_t i2c, uint8_t reg, uint8_t data) {
-    I2C_DR(i2c) = reg;
-    while (!(I2C_SR1(i2c) & (I2C_SR1_TxE))) continue;
+void i2c_write(uint32_t i2c, uint8_t data) {
     I2C_DR(i2c) = data;
     while (!(I2C_SR1(i2c) & (I2C_SR1_TxE))) continue;
+}
+
+uint8_t i2c_read(uint32_t i2c){
+    while (!(I2C_SR1(i2c) & (I2C_SR1_RxNE))) continue;
+    return I2C_DR(i2c);
 }

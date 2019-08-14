@@ -12,6 +12,7 @@
 #include "delay.h"
 #include "uart.h"
 #include "move.h"
+#include "i2c.h"
 
 volatile uint32_t millis;
 
@@ -96,12 +97,7 @@ static void spi_setup(void) {
                     SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE;
 }
 
-static void i2c_setup() {
-    I2C_CR2(I2C1) |= I2C_CR2_FREQ_36MHZ;
-    I2C_CCR(I2C1) |= I2C_CCR_FS | 0x1e;
-    I2C_TRISE(I2C1) = 0x0b;
-    I2C_CR1(I2C1) |= I2C_CR1_PE;
-}
+
 
 static void nvic_start(void) {
     systick_interrupt_enable();

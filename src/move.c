@@ -16,8 +16,8 @@ void move_setup() {
 }
 
 void move(int16_t m1, int16_t m2) {
-    m1 = constrain(m1, -10000, 10000);
-    m2 = constrain(m2, -10000, 10000);
+    m1 = constrain(m1, -10000, 9000);
+    m2 = constrain(m2, -10000, 9000);
     if (abs(m1) < 500) m1 = 0;
     if (abs(m2) < 500) m2 = 0;
 

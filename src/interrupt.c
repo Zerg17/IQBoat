@@ -16,7 +16,7 @@ void sys_tick_handler() {
     rc_update();
     if (rc_check()) {
        
-        int16_t s = mapc(u[1], 1100, 1900, -10000, 10000);
+        int16_t s = mapc(u[1], 1100, 1900, -7000, 7000);
         int16_t a = mapc(u[0], 1100, 1900, -5000, 5000);
 
         if(!(millis%5)){
