@@ -90,42 +90,43 @@ int main(void) {
         // }
         // I2C_CR1(I2C1) |= I2C_CR1_STOP;
 
-        int16_t x, y, z;
-        if (!i2c_start(I2C1, 0x1E, I2C_WRITE)) {
-            i2c_write(I2C1, 3);
-            I2C_CR1(I2C1) |= I2C_CR1_ACK;
-            i2c_start(I2C1, 0x1E, I2C_READ);
-            x = i2c_read(I2C1) << 8;
-            x |= i2c_read(I2C1);
-            z = i2c_read(I2C1) << 8;
-            z |= i2c_read(I2C1);
-            y = i2c_read(I2C1) << 8;
-            I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
-            y |= i2c_read(I2C1);
-            i2c_stop(I2C1);
+        // int16_t x, y, z;
+        // if (!i2c_start(I2C1, 0x1E, I2C_WRITE)) {
+        //     i2c_write(I2C1, 3);
+        //     I2C_CR1(I2C1) |= I2C_CR1_ACK;
+        //     i2c_start(I2C1, 0x1E, I2C_READ);
+        //     x = i2c_read(I2C1) << 8;
+        //     x |= i2c_read(I2C1);
+        //     z = i2c_read(I2C1) << 8;
+        //     z |= i2c_read(I2C1);
+        //     y = i2c_read(I2C1) << 8;
+        //     I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
+        //     y |= i2c_read(I2C1);
+        //     i2c_stop(I2C1);
 
-            // if(x<minX)minX=x;
-            // if(x>maxX)maxX=x;
+        //     // if(x<minX)minX=x;
+        //     // if(x>maxX)maxX=x;
 
-            // if(y<minY)minY=y;
-            // if(y>maxY)maxY=y;
+        //     // if(y<minY)minY=y;
+        //     // if(y>maxY)maxY=y;
 
-            // if(z<minZ)minZ=z;
-            // if(z>maxZ)maxZ=z;
+        //     // if(z<minZ)minZ=z;
+        //     // if(z>maxZ)maxZ=z;
 
-            x = map(x, minX, maxX, -1000, 1000);
-            y = map(y, minY, maxY, -1000, 1000);
-            z = map(z, minZ, maxZ, -1000, 1000);
-            float angle = atan2(y, x) + PI / 2; //+ 0.19693132;
-            if (angle < 0) angle += 2 * PI;
-            if (angle > 2 * PI) angle -= 2 * PI;
+        //     // x = map(x, minX, maxX, -1000, 1000);
+        //     // y = map(y, minY, maxY, -1000, 1000);
+        //     // z = map(z, minZ, maxZ, -1000, 1000);
+        //     // float angle = atan2(y, x) + PI / 2; //+ 0.19693132;
+        //     // if (angle < 0) angle += 2 * PI;
+        //     // if (angle > 2 * PI) angle -= 2 * PI;
 
-            sprintf(bufC, "%i %i %i %i %i %i\n", minX, maxX, minY, maxY, minZ, maxZ);
-            //sprintf(bufC, "%f\n", angle * (180 / PI));
-            uart_print(bufC);
-        }
+        //     sprintf(bufC, "%i %i %i\n", x, y, z);
+        //     //sprintf(bufC, "%i %i %i %i %i %i\n", minX, maxX, minY, maxY, minZ, maxZ);
+        //     //sprintf(bufC, "%f\n", angle * (180 / PI));
+        //     uart_print(bufC);
+        // }
 
-        _delay_ms(200);
+        _delay_ms(70);
 
         // uint8_t buf[6];
         // compas_reads(3, buf, 6);
@@ -141,5 +142,9 @@ int main(void) {
         // lora_write((uint8_t*)u, 8);
         // endPacket();
         // _delay_ms(200);
+
+        
+        //sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
+        //uart_print(bufC);
     }
 }

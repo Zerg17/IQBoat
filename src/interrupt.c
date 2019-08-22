@@ -16,14 +16,15 @@ void sys_tick_handler() {
     rc_update();
     if (rc_check()) {
        
-        int16_t s = mapc(u[1], 1100, 1900, -7000, 7000);
+        int16_t s = mapc(u[1], 1100, 1900, -10000, 10000);
         int16_t a = mapc(u[0], 1100, 1900, -5000, 5000);
 
         if(!(millis%5)){
-            //sprintf(bufC, "%u %u %u %u\n", u[0], u[1], u[2], u[3]);
-            //usart_print(bufC);
+            sprintf(bufC, "%u %u %u %u %i %i\n", u[0], u[1], u[2], u[3], s+a, s-a);
+            uart_print(bufC);
         }
         move(s + a, s - a);
+        //move(s/10, s/10);
     } else {
         move(0, 0);
     }

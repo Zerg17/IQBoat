@@ -16,14 +16,14 @@ void move_setup() {
 }
 
 void move(int16_t m1, int16_t m2) {
-    m1 = constrain(m1, -10000, 9000);
-    m2 = constrain(m2, -10000, 9000);
-    if (abs(m1) < 500) m1 = 0;
-    if (abs(m2) < 500) m2 = 0;
+    m1 = constrain(m1, -10000, 10000);
+    m2 = constrain(m2, -10000, 10000);
+    if (abs(m1) < 100) m1 = 0;
+    if (abs(m2) < 100) m2 = 0;
 
     TIM_CCR1(TIM3) = m1 > 0 ? m1 : 0;
-    TIM_CCR2(TIM3) = m1 < 0 ? abs(m1) : 0;
+    TIM_CCR2(TIM3) = m1 < 0 ? -m1 : 0;
     TIM_CCR3(TIM3) = m2 > 0 ? m2 : 0;
-    TIM_CCR4(TIM3) = m2 < 0 ? abs(m2) : 0;
+    TIM_CCR4(TIM3) = m2 < 0 ? -m2 : 0;
 }
 
